@@ -1,16 +1,33 @@
 name: Terraform Reusable Workflow
 
 on: 
-  push:
-    branches:
-      - main
+  workflow_call:
+    inputs:
+      terraform_version:
+        required: false
+        type: string
+    secrets:
+      TF_API_TOKEN:
+        required: true
 
 jobs:
   terraform:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: terraform/
 
     steps:
     - uses: actions/checkout@v4
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: ${{ inputs.terraform_version }}
+        cli_config_credentials_toke: ${{ secrets.TF_API_TOKEN }}
+
+    - name: Terraform Init
+      run: terraform init
 
     - name: terraform version
       run: terraform version
