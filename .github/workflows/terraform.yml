@@ -1,0 +1,16 @@
+name: Terraform Reusable Workflow
+
+on: 
+  push:
+    branches:
+      - main
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: terraform version
+      run: terraform version
